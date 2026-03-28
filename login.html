@@ -240,12 +240,20 @@
 
   <!-- Forgot Password Panel -->
   <div id="forgotPanel" style="display:none;margin-top:20px;background:#F0FBF7;border:1px solid var(--border);border-radius:14px;padding:20px">
-    <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:10px">Reset your password</div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">
-      To reset your password, visit MediWhats and use Forgot Password. Your login email is the same one registered on RightPhysio.
+    <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px">Reset Password</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Enter your registered email to receive an OTP.</div>
+    <input type="email" id="forgotEmail" placeholder="your@email.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:10px;box-sizing:border-box">
+    <div id="forgotOtpRow" style="display:none">
+      <input type="text" id="forgotOtp" placeholder="Enter 6-digit OTP from email" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:10px;box-sizing:border-box">
     </div>
-    <a href="https://mediwhats.in" target="_blank" style="display:block;text-align:center;padding:12px;background:var(--green);color:white;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;margin-bottom:10px">Open MediWhats &rarr; Reset Password</a>
-    <button onclick="hideForgot()" style="width:100%;padding:10px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted)">Cancel</button>
+    <div id="forgotPwRow" style="display:none">
+      <input type="password" id="forgotNewPw" placeholder="New password (min 8 characters)" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:10px;box-sizing:border-box">
+    </div>
+    <div id="forgotMsg" style="font-size:12px;margin-bottom:10px;display:none;padding:8px 12px;border-radius:8px"></div>
+    <div style="display:flex;gap:8px">
+      <button id="forgotActionBtn" onclick="doForgotAction()" style="flex:1;padding:11px;background:var(--green);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Send OTP</button>
+      <button onclick="hideForgot()" style="padding:11px 16px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted)">Cancel</button>
+    </div>
   </div>
   <div class="divider"><span>New to RightPhysio?</span></div>
 
@@ -281,102 +289,103 @@ function hideError() {
   document.getElementById('errorMsg').classList.remove('show');
 }
 
-var forgotStep = 'email'; // email → otp → newpw
+var forgotStep = 'email';
+var forgotResetToken = null;
+var forgotEmail = null;
 
 function showForgot() {
+  forgotStep = 'email';
+  forgotResetToken = null;
   document.getElementById('forgotPanel').style.display = 'block';
-  document.getElementById('forgotEmailInput').focus();
+  document.getElementById('forgotOtpRow').style.display = 'none';
+  document.getElementById('forgotPwRow').style.display = 'none';
+  document.getElementById('forgotActionBtn').textContent = 'Send OTP';
+  document.getElementById('forgotMsg').style.display = 'none';
+  document.getElementById('forgotEmail').value = '';
+  document.getElementById('forgotEmail').focus();
 }
 
 function hideForgot() {
   document.getElementById('forgotPanel').style.display = 'none';
-  forgotStep = 'email';
-  document.getElementById('forgotOtpRow').style.display = 'none';
-  document.getElementById('forgotNewPwRow').style.display = 'none';
-  document.getElementById('forgotBtn').textContent = 'Send OTP';
-  document.getElementById('forgotMsg').style.display = 'none';
 }
 
-async function doForgot() {
-  var btn = document.getElementById('forgotBtn');
-  var msgEl = document.getElementById('forgotMsg');
-  msgEl.style.display = 'none';
+function showForgotMsg(msg, isError) {
+  var el = document.getElementById('forgotMsg');
+  el.textContent = msg;
+  el.style.background = isError ? '#FEF2F2' : '#ECFDF5';
+  el.style.color = isError ? '#991B1B' : '#065F46';
+  el.style.display = 'block';
+}
+
+async function doForgotAction() {
+  var btn = document.getElementById('forgotActionBtn');
 
   if (forgotStep === 'email') {
-    var email = document.getElementById('forgotEmailInput').value.trim();
-    if (!email) { msgEl.textContent = 'Enter your email'; msgEl.style.color = '#991B1B'; msgEl.style.display = 'block'; return; }
+    var email = document.getElementById('forgotEmail').value.trim();
+    if (!email) { showForgotMsg('Please enter your email', true); return; }
+    forgotEmail = email;
     btn.disabled = true; btn.textContent = 'Sending...';
     try {
       var res = await fetch(BACKEND + '/auth/forgot-password', {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email: email })
       });
       var data = await res.json();
-      msgEl.textContent = data.message || 'OTP sent to your email';
-      msgEl.style.color = '#065F46'; msgEl.style.display = 'block';
+      showForgotMsg(data.message || 'OTP sent to your email', false);
       document.getElementById('forgotOtpRow').style.display = 'block';
       btn.textContent = 'Verify OTP';
       forgotStep = 'otp';
     } catch(e) {
-      msgEl.textContent = 'Failed to send OTP. Try again.'; msgEl.style.color = '#991B1B'; msgEl.style.display = 'block';
+      showForgotMsg('Failed to send OTP. Please try again.', true);
     }
     btn.disabled = false;
 
   } else if (forgotStep === 'otp') {
-    var otp = document.getElementById('forgotOtpInput').value.trim();
-    var email = document.getElementById('forgotEmailInput').value.trim();
-    if (!otp) { msgEl.textContent = 'Enter the OTP'; msgEl.style.color = '#991B1B'; msgEl.style.display = 'block'; return; }
+    var otp = document.getElementById('forgotOtp').value.trim();
+    if (!otp) { showForgotMsg('Please enter the OTP', true); return; }
     btn.disabled = true; btn.textContent = 'Verifying...';
     try {
       var res = await fetch(BACKEND + '/auth/verify-otp', {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ email, otp })
+        body: JSON.stringify({ email: forgotEmail, otp: otp })
       });
       var data = await res.json();
       if (data.success && data.reset_token) {
-        window._resetToken = data.reset_token;
-        window._resetEmail = email;
-        document.getElementById('forgotNewPwRow').style.display = 'block';
+        forgotResetToken = data.reset_token;
+        showForgotMsg('OTP verified! Enter your new password.', false);
+        document.getElementById('forgotPwRow').style.display = 'block';
         btn.textContent = 'Reset Password';
         forgotStep = 'newpw';
-        msgEl.textContent = 'OTP verified. Enter your new password.';
-        msgEl.style.color = '#065F46'; msgEl.style.display = 'block';
       } else {
-        msgEl.textContent = data.error || data.message || 'Invalid OTP';
-        msgEl.style.color = '#991B1B'; msgEl.style.display = 'block';
+        showForgotMsg(data.error || data.message || 'Invalid OTP', true);
       }
     } catch(e) {
-      msgEl.textContent = 'Verification failed. Try again.';
-      msgEl.style.color = '#991B1B'; msgEl.style.display = 'block';
+      showForgotMsg('Verification failed. Try again.', true);
     }
     btn.disabled = false;
 
   } else if (forgotStep === 'newpw') {
     var pw = document.getElementById('forgotNewPw').value;
-    if (!pw || pw.length < 8) { msgEl.textContent = 'Password must be at least 8 characters'; msgEl.style.color = '#991B1B'; msgEl.style.display = 'block'; return; }
+    if (!pw || pw.length < 8) { showForgotMsg('Password must be at least 8 characters', true); return; }
     btn.disabled = true; btn.textContent = 'Resetting...';
     try {
       var res = await fetch(BACKEND + '/auth/reset-password', {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          email: window._resetEmail,
-          reset_token: window._resetToken,
-          new_password: pw
-        })
+        body: JSON.stringify({ email: forgotEmail, reset_token: forgotResetToken, new_password: pw })
       });
       var data = await res.json();
       if (data.success) {
-        msgEl.textContent = 'Password reset successfully! You can now sign in.';
-        msgEl.style.color = '#065F46'; msgEl.style.display = 'block';
+        showForgotMsg('Password reset successfully! You can now sign in.', false);
+        btn.textContent = 'Done';
         setTimeout(function(){ hideForgot(); }, 2000);
       } else {
-        msgEl.textContent = data.error || data.message || 'Reset failed.';
-        msgEl.style.color = '#991B1B'; msgEl.style.display = 'block';
+        showForgotMsg(data.error || data.message || 'Reset failed', true);
+        btn.disabled = false; btn.textContent = 'Reset Password';
       }
     } catch(e) {
-      msgEl.textContent = 'Reset failed. Try again.'; msgEl.style.color = '#991B1B'; msgEl.style.display = 'block';
+      showForgotMsg('Reset failed. Please try again.', true);
+      btn.disabled = false; btn.textContent = 'Reset Password';
     }
-    btn.disabled = false;
   }
 }
 
