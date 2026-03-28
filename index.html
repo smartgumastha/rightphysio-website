@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RightPhysio — Find the Right Physiotherapist Near You</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00C48C;
+    --green-dark: #00A878;
+    --green-deep: #007A5A;
+    --ink: #0D1F1A;
+    --ink-2: #2A3D38;
+    --muted: #6B8A84;
+    --surface: #F2FAF7;
+    --white: #FFFFFF;
+    --border: #D4EDE6;
+    --orange: #FF6B35;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 16px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .nav-logo span { color: var(--green); }
+
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    background: var(--green); color: var(--white);
+    padding: 10px 22px; border-radius: 50px;
+    font-size: 14px; font-weight: 600;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 40px 80px;
+    background: linear-gradient(160deg, #F0FBF7 0%, #FFFFFF 50%, #F5FFF9 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,196,140,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,196,140,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    position: relative; z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,196,140,0.12); border: 1px solid rgba(0,196,140,0.3);
+    color: var(--green-deep); padding: 6px 14px; border-radius: 50px;
+    font-size: 12px; font-weight: 600; margin-bottom: 24px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 700; line-height: 1.1;
+    color: var(--ink);
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: normal; color: var(--green);
+    position: relative;
+  }
+
+  .hero h1 em::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: var(--green); border-radius: 2px; opacity: 0.3;
+  }
+
+  .hero-sub {
+    font-size: 18px; color: var(--muted); line-height: 1.7;
+    margin-top: 20px; max-width: 480px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-search {
+    margin-top: 36px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 60px;
+    padding: 8px 8px 8px 24px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .hero-search input {
+    flex: 1; border: none; outline: none;
+    font-size: 15px; font-family: 'Inter', sans-serif;
+    color: var(--ink); background: transparent;
+  }
+
+  .hero-search input::placeholder { color: var(--muted); }
+
+  .hero-search button {
+    background: var(--green); color: var(--white);
+    border: none; padding: 12px 28px; border-radius: 50px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .hero-search button:hover { background: var(--green-dark); }
+
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 32px;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .hero-stat { }
+  .hero-stat-num {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 28px; font-weight: 700; color: var(--ink);
+  }
+  .hero-stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* Hero illustration */
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-card-stack {
+    position: relative; width: 340px; height: 420px;
+  }
+
+  .physio-card {
+    position: absolute;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    transition: transform 0.3s;
+  }
+
+  .physio-card:nth-child(1) {
+    top: 0; left: 0; right: 0;
+    animation: float1 4s ease-in-out infinite;
+  }
+
+  .physio-card:nth-child(2) {
+    top: 160px; left: 20px; right: -20px;
+    animation: float2 4s ease-in-out infinite;
+  }
+
+  .physio-card:nth-child(3) {
+    top: 300px; left: -10px; right: 10px;
+    animation: float3 4s ease-in-out infinite;
+  }
+
+  .pc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+  .pc-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--green-deep));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 16px;
+    font-family: 'Clash Display', sans-serif;
+  }
+
+  .pc-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .pc-spec { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .pc-badge {
+    margin-left: auto; background: rgba(0,196,140,0.12);
+    color: var(--green-deep); padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+  }
+
+  .pc-stars { font-size: 12px; color: #FFB800; }
+  .pc-detail { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  .pc-btn {
+    margin-top: 12px; width: 100%;
+    background: var(--green); color: white;
+    border: none; padding: 10px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 80px 40px; }
+
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+
+  .section-tag {
+    display: inline-block;
+    background: rgba(0,196,140,0.1); color: var(--green-deep);
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; margin-bottom: 16px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .section-title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700; line-height: 1.2;
+    color: var(--ink); margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 16px; color: var(--muted); line-height: 1.7;
+    max-width: 560px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how { background: var(--surface); }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+    margin-top: 48px;
+  }
+
+  .step {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .step:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+  .step-num {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 48px; font-weight: 700;
+    color: rgba(0,196,140,0.15); position: absolute;
+    top: 16px; right: 20px; line-height: 1;
+  }
+
+  .step-icon {
+    width: 48px; height: 48px; background: rgba(0,196,140,0.1);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 16px;
+  }
+
+  .step h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* ── SPECIALTIES ── */
+  .specialties-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-top: 48px;
+  }
+
+  .specialty-card {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 24px 20px;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .specialty-card:hover {
+    border-color: var(--green); background: rgba(0,196,140,0.04);
+    transform: translateY(-2px);
+  }
+
+  .specialty-icon { font-size: 32px; margin-bottom: 12px; }
+  .specialty-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .specialty-count { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── JOIN SECTION (Physio signup CTA) ── */
+  .join {
+    background: linear-gradient(135deg, var(--ink) 0%, var(--ink-2) 100%);
+    position: relative; overflow: hidden;
+  }
+
+  .join::before {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,196,140,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .join-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    align-items: center; position: relative; z-index: 1;
+  }
+
+  .join h2 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(28px, 4vw, 44px); font-weight: 700;
+    color: var(--white); line-height: 1.2; margin-bottom: 16px;
+  }
+
+  .join h2 span { color: var(--green); }
+
+  .join p { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 32px; }
+
+  .join-benefits { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+
+  .join-benefit {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; color: rgba(255,255,255,0.8);
+  }
+
+  .join-benefit::before {
+    content: '✓';
+    width: 22px; height: 22px; background: var(--green);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+
+  /* ── SIGNUP FORM ── */
+  .signup-form {
+    background: var(--white); border-radius: 24px;
+    padding: 36px; box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+  }
+
+  .signup-form h3 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .signup-form p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .form-group { margin-bottom: 14px; }
+
+  .form-group label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--ink-2); margin-bottom: 6px;
+  }
+
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    color: var(--ink); background: var(--white);
+    outline: none; transition: border-color 0.2s;
+  }
+
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--green);
+  }
+
+  .form-group input::placeholder { color: var(--muted); }
+
+  .form-submit {
+    width: 100%; padding: 14px;
+    background: var(--green); color: var(--white);
+    border: none; border-radius: 12px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; font-family: 'Inter', sans-serif;
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 4px;
+  }
+
+  .form-submit:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+  .form-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.5);
+    padding: 40px; text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 20px; font-weight: 700; color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .footer-logo span { color: var(--green); }
+
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin: 16px 0; }
+  .footer-links a { color: rgba(255,255,255,0.4); font-size: 13px; text-decoration: none; }
+  .footer-links a:hover { color: var(--white); }
+
+  footer p { font-size: 12px; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 999;
+    background: var(--ink); color: white;
+    padding: 14px 20px; border-radius: 12px;
+    font-size: 14px; font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.3s; pointer-events: none;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-left: 4px solid var(--green); }
+  .toast.error { border-left: 4px solid #FF4444; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float1 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes float2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes float3 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    section { padding: 60px 20px; }
+    .steps { grid-template-columns: 1fr; }
+    .specialties-grid { grid-template-columns: repeat(2, 1fr); }
+    .join-inner { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Right<span>Physio</span></div>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#specialties">Specialties</a>
+    <a href="#join">For Physios</a>
+  </div>
+  <a href="#join" class="nav-cta">Join as Physio</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">🇮🇳 India's Physio Network</div>
+      <h1>Find the <em>Right</em> Physiotherapist Near You</h1>
+      <p class="hero-sub">Book certified physiotherapists for home visits, clinic sessions, or online consultations. Across India.</p>
+
+      <div class="hero-search">
+        <span style="font-size:18px">📍</span>
+        <input type="text" id="searchCity" placeholder="Enter your city or pincode..." />
+        <button onclick="searchPhysio()">Find Physio</button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">500+</div>
+          <div class="hero-stat-label">Verified Physios</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">50+</div>
+          <div class="hero-stat-label">Cities</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">4.8★</div>
+          <div class="hero-stat-label">Avg Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <div class="physio-card">
+          <div class="pc-header">
+            <div class="pc-avatar">RK</div>
+            <div>
+              <div class="pc-name">Dr. Ravi Kumar</div>
+              <div class="pc-spec">Orthopedic Physiotherapy · Hyderabad</div>
+            </div>
+            <div class="pc-badge">Available</div>
+          </div>
+          <div class="pc-stars">★★★★★ <span style="color:var(--muted);font-size:11px">4.9 (128 reviews)</span></div>
+          <div class="pc-detail">🏥 Home visits · Clinic · Teleconsult</div>
+          <div class="pc-detail" style="margin-top:4px">💰 ₹500/session</div>
+          <button class="pc-btn">Book Session</button>
+        </div>
+
+        <div class="physio-card">
+          <div class="pc-header">
+            <div class="pc-avatar" style="background:linear-gradient(135deg,#7C3AED,#4C1D95)">SP</div>
+            <div>
+              <div class="pc-name">Dr. Sneha Patel</div>
+              <div class="pc-spec">Sports Physiotherapy · Pune</div>
+            </div>
+            <div class="pc-badge">Available</div>
+          </div>
+          <div class="pc-stars">★★★★★ <span style="color:var(--muted);font-size:11px">4.8 (96 reviews)</span></div>
+          <button class="pc-btn">Book Session</button>
+        </div>
+
+        <div class="physio-card">
+          <div class="pc-header">
+            <div class="pc-avatar" style="background:linear-gradient(135deg,#F59E0B,#B45309)">AM</div>
+            <div>
+              <div class="pc-name">Dr. Arjun Mehta</div>
+              <div class="pc-spec">Neuro Physiotherapy · Bangalore</div>
+            </div>
+          </div>
+          <div class="pc-stars">★★★★☆ <span style="color:var(--muted);font-size:11px">4.7 (74 reviews)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="section-tag">How It Works</div>
+    <h2 class="section-title">Get care in 3 simple steps</h2>
+    <p class="section-sub">From search to session in minutes. No referrals needed.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">🔍</div>
+        <h3>Search by Location</h3>
+        <p>Enter your city or pincode to see verified physiotherapists near you, with real-time availability.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">📅</div>
+        <h3>Book Your Session</h3>
+        <p>Choose a time that works for you — home visit, clinic, or teleconsult. Instant confirmation.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">💪</div>
+        <h3>Start Recovery</h3>
+        <p>Your physio arrives prepared. Digital records maintained. Follow-up reminders sent automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALTIES -->
+<section id="specialties">
+  <div class="section-inner">
+    <div class="section-tag">Specialties</div>
+    <h2 class="section-title">Every condition, covered</h2>
+    <p class="section-sub">Certified physiotherapists across all major specializations.</p>
+
+    <div class="specialties-grid">
+      <div class="specialty-card">
+        <div class="specialty-icon">🦴</div>
+        <div class="specialty-name">Orthopedic</div>
+        <div class="specialty-count">Joints, spine, fractures</div>
+      </div>
+      <div class="specialty-card">
+        <div class="specialty-icon">⚽</div>
+        <div class="specialty-name">Sports Injury</div>
+        <div class="specialty-count">Athletes & active recovery</div>
+      </div>
+      <div class="specialty-card">
+        <div class="specialty-icon">🧠</div>
+        <div class="specialty-name">Neurological</div>
+        <div class="specialty-count">Stroke, Parkinson's, CP</div>
+      </div>
+      <div class="specialty-card">
+        <div class="specialty-icon">👶</div>
+        <div class="specialty-name">Pediatric</div>
+        <div class="specialty-count">Children's rehab</div>
+      </div>
+      <div class="specialty-card">
+        <div class="specialty-icon">🤰</div>
+        <div class="specialty-name">Women's Health</div>
+        <div class="specialty-count">Pre & postnatal care</div>
+      </div>
+      <div class="specialty-card">
+        <div class="specialty-icon">🫁</div>
+        <div class="specialty-name">Cardiopulmonary</div>
+        <div class="specialty-count">Breathing & cardiac rehab</div>
+      </div>
+      <div class="specialty-card">
+        <div class="specialty-icon">👴</div>
+        <div class="specialty-name">Geriatric</div>
+        <div class="specialty-count">Elderly mobility & falls</div>
+      </div>
+      <div class="specialty-card">
+        <div class="specialty-icon">🏠</div>
+        <div class="specialty-name">Home Visit</div>
+        <div class="specialty-count">We come to you</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN / SIGNUP -->
+<section class="join" id="join">
+  <div class="join-inner">
+    <div>
+      <div class="section-tag" style="background:rgba(0,196,140,0.2);color:#00C48C">For Physiotherapists</div>
+      <h2>Grow your practice with <span>RightPhysio</span></h2>
+      <p>Join India's fastest growing physiotherapy network. Get patients, manage appointments, and build your digital reputation.</p>
+
+      <div class="join-benefits">
+        <div class="join-benefit">Get verified patient leads in your area</div>
+        <div class="join-benefit">Free digital profile & booking page</div>
+        <div class="join-benefit">Manage records with MediWhats EMR</div>
+        <div class="join-benefit">Build reviews & grow your reputation</div>
+        <div class="join-benefit">Accept payments online — UPI, Card, Net Banking</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;gap:-8px">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--green);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700">R</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#7C3AED;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;margin-left:-8px">S</div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#F59E0B;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;margin-left:-8px">A</div>
+        </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.5)">500+ physios already on the platform</div>
+      </div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="signup-form">
+      <h3>Apply to Join</h3>
+      <p>Takes 2 minutes. We'll review and activate your profile within 24 hours.</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="f-fname" placeholder="Dr. Ravi">
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="f-lname" placeholder="Kumar">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Mobile Number *</label>
+        <input type="tel" id="f-phone" placeholder="+91 98765 43210">
+      </div>
+
+      <div class="form-group">
+        <label>Email Address *</label>
+        <input type="email" id="f-email" placeholder="ravi@example.com">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Specialization *</label>
+          <select id="f-spec">
+            <option value="">Select specialty</option>
+            <option>Orthopedic Physiotherapy</option>
+            <option>Sports Physiotherapy</option>
+            <option>Neurological Physiotherapy</option>
+            <option>Pediatric Physiotherapy</option>
+            <option>Cardiopulmonary Physiotherapy</option>
+            <option>Women's Health Physiotherapy</option>
+            <option>Geriatric Physiotherapy</option>
+            <option>General Physiotherapy</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Years of Experience *</label>
+          <select id="f-exp">
+            <option value="">Select</option>
+            <option>Less than 1 year</option>
+            <option>1–3 years</option>
+            <option>3–5 years</option>
+            <option>5–10 years</option>
+            <option>10+ years</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" id="f-city" placeholder="Hyderabad">
+        </div>
+        <div class="form-group">
+          <label>Pincode *</label>
+          <input type="text" id="f-pin" placeholder="500001">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>IAP/IPA Registration Number</label>
+        <input type="text" id="f-reg" placeholder="Registration number (optional)">
+      </div>
+
+      <button class="form-submit" onclick="submitApplication()">Submit Application →</button>
+      <p class="form-note">By submitting, you agree to our Terms of Service and Privacy Policy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Right<span>Physio</span></div>
+  <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:12px">Powered by MediWhats — AI Hospital Manager</p>
+  <div class="footer-links">
+    <a href="#">About</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
+  <p>© 2026 RightPhysio. All rights reserved. | A SmartGumastha product</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var BACKEND = 'https://www.mediwhats.in/backend/api';
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  setTimeout(function() { t.className = 'toast'; }, 3500);
+}
+
+function searchPhysio() {
+  var city = document.getElementById('searchCity').value.trim();
+  if (!city) { showToast('Please enter your city or pincode', 'error'); return; }
+  showToast('Searching physios in ' + city + '... (coming soon)', 'success');
+}
+
+function submitApplication() {
+  var fname = document.getElementById('f-fname').value.trim();
+  var lname = document.getElementById('f-lname').value.trim();
+  var phone = document.getElementById('f-phone').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var spec  = document.getElementById('f-spec').value;
+  var exp   = document.getElementById('f-exp').value;
+  var city  = document.getElementById('f-city').value.trim();
+  var pin   = document.getElementById('f-pin').value.trim();
+
+  if (!fname || !lname || !phone || !email || !spec || !exp || !city || !pin) {
+    showToast('Please fill all required fields', 'error'); return;
+  }
+
+  var btn = document.querySelector('.form-submit');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  fetch(BACKEND + '/physio/apply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ first_name: fname, last_name: lname, phone: phone,
+      email: email, specialization: spec, experience: exp,
+      city: city, pincode: pin,
+      reg_number: document.getElementById('f-reg').value.trim(),
+      platform: 'rightphysio' })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success) {
+      showToast('Application submitted! We\'ll contact you within 24 hours ✓', 'success');
+      btn.textContent = '✓ Application Submitted';
+      btn.style.background = '#065F46';
+    } else {
+      showToast(data.message || 'Submission failed. Try again.', 'error');
+      btn.disabled = false; btn.textContent = 'Submit Application →';
+    }
+  })
+  .catch(function() {
+    showToast('Network error. Please try again.', 'error');
+    btn.disabled = false; btn.textContent = 'Submit Application →';
+  });
+}
+</script>
+</body>
+</html>
