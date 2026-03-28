@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/backend/:path*", "destination": "https://www.mediwhats.in/backend/:path*" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/apply", "destination": "/index.html" }
