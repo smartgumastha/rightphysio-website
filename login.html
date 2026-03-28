@@ -240,22 +240,13 @@
 
   <!-- Forgot Password Panel -->
   <div id="forgotPanel" style="display:none;margin-top:20px;background:#F0FBF7;border:1px solid var(--border);border-radius:14px;padding:20px">
-    <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px">Reset Password</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Enter your registered email. We'll send a reset OTP.</div>
-    <input type="email" id="forgotEmailInput" placeholder="your@email.com" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;margin-bottom:10px">
-    <div id="forgotOtpRow" style="display:none;margin-bottom:10px">
-      <input type="text" id="forgotOtpInput" placeholder="Enter OTP from email" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none">
+    <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:10px">Reset your password</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">
+      To reset your password, visit MediWhats and use Forgot Password. Your login email is the same one registered on RightPhysio.
     </div>
-    <div id="forgotNewPwRow" style="display:none;margin-bottom:10px">
-      <input type="password" id="forgotNewPw" placeholder="New password (min 8 chars)" style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none">
-    </div>
-    <div style="display:flex;gap:8px">
-      <button id="forgotBtn" onclick="doForgot()" style="flex:1;padding:11px;background:var(--green);color:white;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif">Send OTP</button>
-      <button onclick="hideForgot()" style="padding:11px 16px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted)">Cancel</button>
-    </div>
-    <div id="forgotMsg" style="font-size:12px;margin-top:8px;color:var(--green-deep);display:none"></div>
+    <a href="https://mediwhats.in" target="_blank" style="display:block;text-align:center;padding:12px;background:var(--green);color:white;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;margin-bottom:10px">Open MediWhats &rarr; Reset Password</a>
+    <button onclick="hideForgot()" style="width:100%;padding:10px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted)">Cancel</button>
   </div>
-
   <div class="divider"><span>New to RightPhysio?</span></div>
 
   <div class="apply-link">
