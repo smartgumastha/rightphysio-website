@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — RightPhysio</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #F2FAF7;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .loading {
+    text-align: center;
+  }
+  .logo {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 28px; font-weight: 700; color: #0D1F1A;
+    margin-bottom: 8px;
+  }
+  .logo span { color: #00C48C; }
+  .subtitle { font-size: 14px; color: #6B8A84; margin-bottom: 32px; }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(0,196,140,0.2);
+    border-top-color: #00C48C;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .msg { font-size: 14px; color: #6B8A84; }
+  .error-box {
+    background: #FEF2F2; border: 1px solid #FECACA;
+    border-radius: 12px; padding: 20px 24px;
+    max-width: 400px; text-align: center; display: none;
+  }
+  .error-box p { font-size: 14px; color: #991B1B; margin-bottom: 16px; }
+  .error-box a {
+    background: #00C48C; color: white;
+    padding: 10px 20px; border-radius: 8px;
+    text-decoration: none; font-size: 14px; font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<div class="loading" id="loadingView">
+  <div class="logo">Right<span>Physio</span></div>
+  <div class="subtitle">Physiotherapist Portal</div>
+  <div class="spinner"></div>
+  <div class="msg">Loading your dashboard...</div>
+</div>
+
+<div class="error-box" id="errorView">
+  <p>Session expired or not found. Please login again.</p>
+  <a href="/login">Go to Login</a>
+</div>
+
+<script>
+// Check if user is logged in via rightphysio session
+var token = localStorage.getItem('rp_token');
+var hospitalId = localStorage.getItem('rp_hospital_id');
+var user = localStorage.getItem('rp_user');
+var loginData = localStorage.getItem('rp_login_data');
+
+if (!token) {
+  window.location.href = '/login';
+} else {
+  // Bridge: copy rp_ session vars to mw_ session vars that MediWhats app.html uses
+  localStorage.setItem('mw_token', token);
+  localStorage.setItem('mw_hospital_id', hospitalId || '');
+  if (loginData) {
+    localStorage.setItem('mw_login_data', loginData);
+  }
+
+  // Redirect to MediWhats HMS at mediwhats.in
+  // Pass token as URL param so app.html can auto-login
+  var redirectUrl = 'https://mediwhats.in?rp_token=' + encodeURIComponent(token) +
+    '&rp_hospital=' + encodeURIComponent(hospitalId || '') +
+    '&rp_user=' + encodeURIComponent(user || '') +
+    '&rp_from=rightphysio';
+
+  setTimeout(function() {
+    window.location.href = redirectUrl;
+  }, 800);
+}
+</script>
+
+</body>
+</html>
