@@ -79,7 +79,7 @@ if (!token) {
 
   // Redirect to MediWhats HMS at mediwhats.in
   // Pass token as URL param so app.html can auto-login
-  var redirectUrl = 'https://mediwhats.in?rp_token=' + encodeURIComponent(token) +
+  var redirectUrl = 'https://mediwhats.in/app?rp_token=' + encodeURIComponent(token) +
     '&rp_hospital=' + encodeURIComponent(hospitalId || '') +
     '&rp_user=' + encodeURIComponent(user || '') +
     '&rp_from=rightphysio';
